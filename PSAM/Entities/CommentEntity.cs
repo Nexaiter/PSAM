@@ -27,7 +27,7 @@ namespace PSAM.Entities
         public CommentEntity ParentComment { get; set; }
 
         // Relacja do potencjalnych odpowiedzi na ten komentarz
-        public ICollection<CommentEntity> Replies { get; set; } = new List<CommentEntity>();
+        public virtual ICollection<CommentEntity> Replies { get; set; } = new List<CommentEntity>();
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

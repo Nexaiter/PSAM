@@ -25,8 +25,7 @@ namespace PSAM.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Konfiguracja SubscribersEntity
-            modelBuilder.Entity<SubscribersEntity>()
+            /*modelBuilder.Entity<SubscribersEntity>()
                 .HasKey(s => new { s.SubscriberId, s.SubscribeeId });
 
             modelBuilder.Entity<SubscribersEntity>()
@@ -47,8 +46,39 @@ namespace PSAM.Entities
                 .WithMany()
                 .HasForeignKey(t => t.AccountId)
                 .OnDelete(DeleteBehavior.Cascade);
-            /////////////////////////////////////////////////////
-           
+            */
+
+            // Configure the relationship between AccountEntity and SubscribersEntity
+            modelBuilder.Entity<SubscribersEntity>()
+                .HasKey(e => new { e.SubscriberId, e.SubscribeeId }); // Composite key for the join table
+
+            modelBuilder.Entity<SubscribersEntity>()
+                .HasOne(e => e.SubscriberAccount)
+                .WithMany(a => a.Subscribees)
+                .HasForeignKey(e => e.SubscriberId)
+                .OnDelete(DeleteBehavior.Restrict); // Avoids circular cascade delete
+
+            modelBuilder.Entity<SubscribersEntity>()
+                .HasOne(e => e.SubscribeeAccount)
+                .WithMany(a => a.Subscribers)
+                .HasForeignKey(e => e.SubscribeeId)
+                .OnDelete(DeleteBehavior.Restrict); // Avoids circular cascade delete
+
+            // Konfiguracja relacji Comment -> Post (bez kaskadowego usuwania)
+            modelBuilder.Entity<CommentEntity>()
+                .HasOne(c => c.Post)
+                .WithMany(p => p.Comments) // Zakładając, że PostEntity ma kolekcję Comments
+                .HasForeignKey(c => c.PostId)
+                .OnDelete(DeleteBehavior.Restrict); // Bez kaskadowego usuwania
+
+            modelBuilder.Entity<CommentEntity>()
+               .HasOne(c => c.ParentComment)
+               .WithMany(c => c.Replies)
+               .HasForeignKey(c => c.CommentId)
+               .OnDelete(DeleteBehavior.Restrict); // Bez kaskadowego usuwania
+
+            base.OnModelCreating(modelBuilder);
+
         }
     }
 }

@@ -18,5 +18,6 @@ namespace PSAM.Entities
         public DateTime UpdatedAt { get; set; }
         public int Likes { get; set; }
 
+        public virtual ICollection<CommentEntity> Comments { get; set; }
     }
 }

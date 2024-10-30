@@ -27,10 +27,10 @@ namespace PSAM.Entities
         public string Description { get; set; } = "";
         public string ImageUrl { get; set; } = "";
 
-        // Kolekcje subskrybentów i subskrybowanych
-        public virtual ICollection<SubscribersEntity> Subscribers { get; set; } // Konta subskrybujące to konto
-        public virtual ICollection<SubscribersEntity> Subscribing { get; set; } // Konta, które subskrybuje to konto
+        // Navigation properties
+        public virtual ICollection<SubscribersEntity> Subscribees { get; set; } // Accounts subscribed to this account
+        public virtual ICollection<SubscribersEntity> Subscribers { get; set; } // Accounts subscribing to this account
 
-        
+
     }
 }
