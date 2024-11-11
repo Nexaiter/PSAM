@@ -31,6 +31,9 @@ namespace PSAM.Entities
         public virtual ICollection<SubscribersEntity> Subscribees { get; set; } // Accounts subscribed to this account
         public virtual ICollection<SubscribersEntity> Subscribers { get; set; } // Accounts subscribing to this account
 
+        public virtual ICollection<PostLikeEntity> PostLikes { get; set; } // Polubienia powiązane z tym kontem
+        public virtual ICollection<CommentLikeEntity> CommentLikes { get; set; } // Polubienia powiązane z tym kontem
+
 
     }
 }

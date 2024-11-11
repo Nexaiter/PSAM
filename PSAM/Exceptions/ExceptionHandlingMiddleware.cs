@@ -23,7 +23,17 @@ namespace WebGame.Exceptions
             {
                 context.Response.StatusCode = (int)HttpStatusCode.Conflict;
                 await context.Response.WriteAsJsonAsync(new { message = ex.Message });
-            }            
+            }
+            catch (PostExceptions ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                await context.Response.WriteAsJsonAsync(new { message = ex.Message });
+            }
+            catch (CommentExceptions ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+                await context.Response.WriteAsJsonAsync(new { message = ex.Message });
+            }
             catch (Exception ex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

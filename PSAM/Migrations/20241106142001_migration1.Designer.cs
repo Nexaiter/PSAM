@@ -12,7 +12,7 @@ using PSAM.Entities;
 namespace PSAM.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241030183830_migration1")]
+    [Migration("20241106142001_migration1")]
     partial class migration1
     {
         /// <inheritdoc />
@@ -117,6 +117,79 @@ namespace PSAM.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("PSAM.Entities.CommentLikeEntity", b =>
+                {
+                    b.Property<int>("LikeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LikeId"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LikeId");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("CommentId");
+
+                    b.ToTable("CommentLikes");
+                });
+
+            modelBuilder.Entity("PSAM.Entities.ImageEntity", b =>
+                {
+                    b.Property<int>("ImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"));
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ImageId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("PSAM.Entities.LikeEntity", b =>
+                {
+                    b.Property<int>("LikeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LikeId"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LikeId");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("PSAM.Entities.PostEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -135,9 +208,6 @@ namespace PSAM.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Likes")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -150,6 +220,29 @@ namespace PSAM.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("PSAM.Entities.PostLikeEntity", b =>
+                {
+                    b.Property<int>("LikeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LikeId"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LikeId");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("PostLikes");
                 });
 
             modelBuilder.Entity("PSAM.Entities.SubscribersEntity", b =>
@@ -219,6 +312,58 @@ namespace PSAM.Migrations
                     b.Navigation("Post");
                 });
 
+            modelBuilder.Entity("PSAM.Entities.CommentLikeEntity", b =>
+                {
+                    b.HasOne("PSAM.Entities.AccountEntity", "Account")
+                        .WithMany("CommentLikes")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PSAM.Entities.CommentEntity", "Comment")
+                        .WithMany("CommentLikes")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Comment");
+                });
+
+            modelBuilder.Entity("PSAM.Entities.ImageEntity", b =>
+                {
+                    b.HasOne("PSAM.Entities.PostEntity", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("PSAM.Entities.LikeEntity", b =>
+                {
+                    b.HasOne("PSAM.Entities.AccountEntity", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PSAM.Entities.CommentEntity", "Comment")
+                        .WithMany()
+                        .HasForeignKey("CommentId");
+
+                    b.HasOne("PSAM.Entities.PostEntity", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId");
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("PSAM.Entities.PostEntity", b =>
                 {
                     b.HasOne("PSAM.Entities.AccountEntity", "Author")
@@ -228,6 +373,24 @@ namespace PSAM.Migrations
                         .IsRequired();
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("PSAM.Entities.PostLikeEntity", b =>
+                {
+                    b.HasOne("PSAM.Entities.AccountEntity", "Account")
+                        .WithMany("PostLikes")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PSAM.Entities.PostEntity", "Post")
+                        .WithMany("PostLikes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("PSAM.Entities.SubscribersEntity", b =>
@@ -262,6 +425,10 @@ namespace PSAM.Migrations
 
             modelBuilder.Entity("PSAM.Entities.AccountEntity", b =>
                 {
+                    b.Navigation("CommentLikes");
+
+                    b.Navigation("PostLikes");
+
                     b.Navigation("Subscribees");
 
                     b.Navigation("Subscribers");
@@ -269,12 +436,16 @@ namespace PSAM.Migrations
 
             modelBuilder.Entity("PSAM.Entities.CommentEntity", b =>
                 {
+                    b.Navigation("CommentLikes");
+
                     b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("PSAM.Entities.PostEntity", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("PostLikes");
                 });
 #pragma warning restore 612, 618
         }

@@ -16,8 +16,9 @@ namespace PSAM.Entities
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public int Likes { get; set; }
+        public virtual ICollection<PostLikeEntity> PostLikes { get; set; } = new List<PostLikeEntity>();
 
         public virtual ICollection<CommentEntity> Comments { get; set; }
+
     }
 }

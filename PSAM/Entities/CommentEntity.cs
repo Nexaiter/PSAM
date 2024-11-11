@@ -18,7 +18,7 @@ namespace PSAM.Entities
         public AccountEntity Author { get; set; }
 
         [ForeignKey("Post")]
-        public int PostId { get; set; }
+        public int? PostId { get; set; }
         public PostEntity Post { get; set; }
 
         // Relacja do rodzica, jeśli komentarz jest odpowiedzią na inny komentarz
@@ -31,6 +31,8 @@ namespace PSAM.Entities
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+
+        public virtual ICollection<CommentLikeEntity> CommentLikes { get; set; } // Polubienia powiązane z tym komentarzem
 
     }
 }

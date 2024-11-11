@@ -1,6 +1,13 @@
-﻿namespace PSAM.Repositories.IRepositories
+﻿using PSAM.Entities;
+
+namespace PSAM.Repositories.IRepositories
 {
     public interface IPostRepository
     {
+        Task CreatePost(PostEntity postEntity);
+        Task DeletePost(int postId);
+        Task UpdatePost(PostEntity postEntity);
+        Task<List<PostEntity>> GetAllPosts(int pageNumber, int pageSize);
+        Task<PostEntity> GetPostById(int postId);
     }
 }

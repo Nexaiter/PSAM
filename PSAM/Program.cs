@@ -90,6 +90,9 @@ namespace PSAM
             // Register services
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IPostService, PostService>();
+            builder.Services.AddScoped<ILikeService, LikeService>();
+            builder.Services.AddScoped<ICommentService, CommentService>();
 
             // Link with database
             builder.Services.AddDbContext<AppDbContext>(o => o.UseSqlServer(@"Server=(localdb)\MSSqlLocalDb;Database=psamDb;Trusted_Connection=True;"));
@@ -101,6 +104,7 @@ namespace PSAM
             builder.Services.AddScoped<ISubscribersRepository, SubscribersRepository>();
             builder.Services.AddScoped<ICommentRepository, CommentRepository>();
             builder.Services.AddScoped<IPostRepository, PostRepository>();
+            builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 
 
             // Add Cors

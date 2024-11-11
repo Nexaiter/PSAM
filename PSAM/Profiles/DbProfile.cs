@@ -12,6 +12,8 @@ namespace PSAM.Profiles
             CreateMap<TechnologyEntity, TechnologyDTOs>();
             CreateMap<PostEntity, PostDTO>();
             CreateMap<CommentEntity, CommentDTO>();
+            CreateMap<PostLikeEntity, PostLikeDTO>();
+            CreateMap<CommentLikeEntity, CommentLikeDTO>();
         }
     }
 }

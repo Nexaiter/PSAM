@@ -36,14 +36,6 @@ namespace PSAM.Services
             }
         }
 
-        /*public async Task<List<AccountEntity>> GetAccountsSubscriptions(int accountId)
-        {
-            return await _appDbContext.Subscribers
-                .Where(s => s.SubscriberId == accountId)
-                .Select(s => s.SubscribeeAccount)
-                .ToListAsync();
-        }*/
-
         public async Task<List<AccountEntity>> GetAccountsSubscriptions(int accountId, int pageNumber, int pageSize)
         {
             return await _appDbContext.Subscribers
