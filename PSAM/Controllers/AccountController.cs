@@ -210,11 +210,68 @@ namespace PSAM.Controllers
             }
         }
 
+        [HttpGet("SubscriberAmount/{accountId}")]
+        public async Task<IActionResult> GetSubscriberAmount(int accountId)
+        {
+            var subscriberAmount = await _accountService.GetSubscriberAmount(accountId);
+            return Ok(new { SubscriberAmount = subscriberAmount });
+        }
+
         [HttpGet("GetAccounts")]
         public async Task<IActionResult> GetAccounts(int pageNumber = 1, int pageSize = 10)
         {
             var accounts = await _accountService.GetAllAccounts(pageNumber, pageSize);
             return Ok(accounts);
+        }
+
+        [HttpPost("UpdateProfileImage")]
+        public async Task<IActionResult> UpdateProfileImage([FromBody] ProfileImageUpdateModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.Base64Image))
+            {
+                return BadRequest(new { message = "Invalid image data." });
+            }
+
+            try
+            {
+                var accountId = _authService.GetUserIdFromToken();
+
+                if (accountId == null)
+                {
+                    return Unauthorized(new { message = "User not authenticated." });
+                }
+
+                // Call the service to update the profile image.
+                await _accountService.UpdateProfileImage(accountId.Value, model.Base64Image);
+
+                return Ok(new { message = "Profile image updated successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while updating the profile image.", error = ex.Message });
+            }
+        }
+
+        [HttpDelete("DeleteProfileImage")]
+        public async Task<IActionResult> DeleteProfileImage()
+        {
+            try
+            {
+                var accountId = _authService.GetUserIdFromToken();
+
+                if (accountId == null)
+                {
+                    return Unauthorized(new { message = "User not authenticated." });
+                }
+
+                await _accountService.DeleteProfileImage(accountId.Value);
+
+                return Ok(new { message = "Profile image deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while deleting the profile image.", error = ex.Message });
+            }
         }
     }
 }

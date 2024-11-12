@@ -12,8 +12,8 @@ using PSAM.Entities;
 namespace PSAM.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241106142001_migration1")]
-    partial class migration1
+    [Migration("20241111164211_migration2")]
+    partial class migration2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,7 @@ namespace PSAM.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("ImageBase64")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -90,13 +90,20 @@ namespace PSAM.Migrations
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
 
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("CommentId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PostId")
+                    b.Property<int>("Likes")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PostId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -201,12 +208,19 @@ namespace PSAM.Migrations
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
 
+                    b.Property<string>("AuthorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -302,8 +316,7 @@ namespace PSAM.Migrations
                     b.HasOne("PSAM.Entities.PostEntity", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Author");
 

@@ -9,5 +9,6 @@ namespace PSAM.Services.IServices
         Task DeletePost(int postId);
         Task<List<PostDTO>> GetAllPosts(int pageNumber, int pageSize);
         Task UpdatePost(int postId, UpdatePostDTO post);
+        Task<List<PostDTO>> GetSubscribedPosts(int accountId, int pageNumber, int pageSize);
     }
 }

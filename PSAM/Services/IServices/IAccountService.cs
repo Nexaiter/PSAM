@@ -23,5 +23,8 @@ namespace PSAM.Services.IServices
         Task<List<AccountDTO>> GetAccountsSubscribers(int accountId, int pageNumber, int pageSize);
         Task Unsubscribe(int accountId, int subscribeeId);
         Task Subscribe(int accountId, int subscribeeId);
+        Task<int> GetSubscriberAmount(int accountId);
+        Task UpdateProfileImage(int accountId, string base64Image);
+        Task DeleteProfileImage(int accountId);
     }
 }

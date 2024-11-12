@@ -11,7 +11,7 @@ namespace PSAM.Repositories
 
         public AccountRepository(AppDbContext appDbContext)
         {
-            _appDbContext = appDbContext;   
+            _appDbContext = appDbContext;
         }
         public async Task<bool> CheckAccountExistence(string login)
         {
@@ -38,7 +38,7 @@ namespace PSAM.Repositories
             var account = await _appDbContext.Accounts.FirstOrDefaultAsync(p => p.AccountId == accountId);
             return account;
         }
-        
+
         public async Task<int> GetId(string login, string password)
         {
             var account = await _appDbContext.Accounts.FirstOrDefaultAsync(p => p.Login == login && p.Password == password);
@@ -50,7 +50,7 @@ namespace PSAM.Repositories
             var account = await _appDbContext.Accounts.FirstOrDefaultAsync(p => p.AccountId == accountId);
             return account.Username;
         }
-               
+
         public async Task RegisterAccount(AccountEntity accountEntity)
         {
             _appDbContext.Accounts.Add(accountEntity);
@@ -82,18 +82,31 @@ namespace PSAM.Repositories
             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task<string> SaveImage(string base64Image)
+        public async Task SaveImageBase64(int accountId, string base64Image)
         {
             if (string.IsNullOrWhiteSpace(base64Image))
-                return null;
+                throw new ArgumentException("Image cannot be empty");
 
-            var imageBytes = Convert.FromBase64String(base64Image);
-            var fileName = Guid.NewGuid().ToString() + ".png"; // or the appropriate image format
-            var filePath = Path.Combine("wwwroot/images", fileName); // Ensure this directory exists
-            await File.WriteAllBytesAsync(filePath, imageBytes);
+            var account = await _appDbContext.Accounts.FindAsync(accountId);
+            if (account == null)
+                throw new AccountDoesntExistException();
 
-            // Return URL to access the image
-            return $"/images/{fileName}";
+            account.ImageBase64 = base64Image;
+            await _appDbContext.SaveChangesAsync();
+        }
+
+        public async Task RemoveProfileImage(int accountId)
+        {
+            var account = await _appDbContext.Accounts.FindAsync(accountId);
+            if (account == null)
+            {
+                throw new AccountDoesntExistException();
+            }
+
+            account.ImageBase64 = null; // Ustawienie na null w bazie danych
+            await _appDbContext.SaveChangesAsync();
+
+
         }
     }
 }

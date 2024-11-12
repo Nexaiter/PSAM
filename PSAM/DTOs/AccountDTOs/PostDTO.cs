@@ -7,6 +7,9 @@ namespace PSAM.DTOs.AccountDTOs
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
+        public string AuthorName { get; set; }
+        public int Likes { get; set; }
+
 
         // Autor posta
         public AccountDTO Author { get; set; }

@@ -13,6 +13,10 @@ namespace PSAM.Entities
         [Required]
         public string Text { get; set; }
 
+        public string AuthorName { get; set; }
+        public int Likes { get; set; }
+
+
         [ForeignKey("Author")]
         public int AuthorId { get; set; }
         public AccountEntity Author { get; set; }

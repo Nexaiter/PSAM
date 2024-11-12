@@ -176,6 +176,28 @@ namespace PSAM.Services
             var subscribers = await _subscribersRepository.GetAccountsSubscribers(accountId, pageNumber, pageSize);
             return _mapper.Map<List<AccountDTO>>(subscribers);
         }
+        public async Task<int> GetSubscriberAmount(int accountId)
+        {
+            return await _subscribersRepository.GetSubscriberAmount(accountId);
+        }
+
+        public async Task UpdateProfileImage(int accountId, string base64Image)
+        {
+            // Validate or process the Base64 string if needed
+            await _accountRepository.SaveImageBase64(accountId, base64Image);
+        }
+
+        public async Task DeleteProfileImage(int accountId)
+        {
+            var account = await _accountRepository.GetAccountById(accountId);
+            if (account == null)
+            {
+                throw new AccountDoesntExistException();
+            }
+
+            account.ImageBase64 = null; // Usuwanie obrazu poprzez ustawienie na null
+            await _accountRepository.UpdateAccount(account);
+        }
     }
 }
 

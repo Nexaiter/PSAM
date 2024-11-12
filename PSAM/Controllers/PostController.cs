@@ -61,6 +61,13 @@ namespace PSAM.Controllers
                 return StatusCode(500, new { message = "An error occurred while updating the post.", error = ex.Message });
             }
         }
-        
+
+        [HttpGet("SubscribedPosts/{accountId}")]
+        public async Task<IActionResult> GetSubscribedPosts(int accountId, int pageNumber = 1, int pageSize = 10)
+        {
+            var posts = await _postService.GetSubscribedPosts(accountId, pageNumber, pageSize);
+            return Ok(posts);
+        }
+
     }
 }

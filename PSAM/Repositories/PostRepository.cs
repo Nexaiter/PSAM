@@ -46,6 +46,17 @@ namespace PSAM.Repositories
             var post = await _appDbContext.Posts.FirstOrDefaultAsync(p => p.Id == postId);
             return post;
         }
-        
+
+        public async Task<List<PostEntity>> GetPostsBySubscribedAccounts(List<int> subscribedAccountIds, int pageNumber, int pageSize)
+        {
+            return await _appDbContext.Posts
+                .Where(post => subscribedAccountIds.Contains(post.AuthorId))
+                .OrderByDescending(post => post.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+
     }
 }

@@ -25,7 +25,7 @@ namespace PSAM.Entities
         public bool IsActive { get; set; } = false;
         public string City { get; set; } = "";
         public string Description { get; set; } = "";
-        public string ImageUrl { get; set; } = "";
+        public string ImageBase64 { get; set; } = "";
 
         // Navigation properties
         public virtual ICollection<SubscribersEntity> Subscribees { get; set; } // Accounts subscribed to this account

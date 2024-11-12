@@ -35,7 +35,7 @@ namespace PSAM.Services
                 AccountId = authorId,
                 PostId = postId
             };
-            await _likeRepository.LikePost(like);
+            await _likeRepository.LikePost(like, postId);
         }
 
         public async Task UnlikePost(int postId)
@@ -83,6 +83,16 @@ namespace PSAM.Services
                 throw new ArgumentException("Comment aint liked");
             }
             await _likeRepository.UnlikeComment(comment);
+        }
+
+        public async Task<int> GetPostLikesCount(int postId)
+        {
+            return await _likeRepository.CountLikesForPost(postId);
+        }
+
+        public async Task<int> GetCommentLikesCount(int commentId)
+        {
+            return await _likeRepository.CountLikesForComment(commentId);
         }
 
     }

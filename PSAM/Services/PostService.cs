@@ -11,19 +11,25 @@ namespace PSAM.Services
     {
         private readonly IMapper _mapper;
         private readonly IPostRepository _postRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly ISubscribersRepository _subscribersRepository;
 
-        public PostService(IMapper mapper, IPostRepository postRepository)
+        public PostService(IMapper mapper, IPostRepository postRepository, IAccountRepository accountRepository, ISubscribersRepository subscribersRepository)
         {
             _mapper = mapper;
             _postRepository = postRepository;
+            _accountRepository = accountRepository;
+            _subscribersRepository = subscribersRepository;
+
         }
 
         public async Task CreatePost(int authorId, string title, string content)
         {
+            var nickname = await _accountRepository.GetUsername(authorId);
             var post = new PostEntity
             {
                 AuthorId = authorId,
-                
+                AuthorName = nickname,
                 Title = title,
                 Content = content,
                 CreatedAt = DateTime.UtcNow,
@@ -62,5 +68,18 @@ namespace PSAM.Services
             }
             
         }
+
+        public async Task<List<PostDTO>> GetSubscribedPosts(int accountId, int pageNumber, int pageSize)
+        {
+            // Pobieranie listy subskrybowanych kont
+            var subscribedAccounts = await _subscribersRepository.GetAccountsSubscriptions(accountId, pageNumber, pageSize);
+            var subscribedAccountIds = subscribedAccounts.Select(account => account.AccountId).ToList();
+
+            // Pobieranie postów subskrybowanych użytkowników
+            var posts = await _postRepository.GetPostsBySubscribedAccounts(subscribedAccountIds, pageNumber, pageSize);
+            return _mapper.Map<List<PostDTO>>(posts);
+        }
+
+
     }
 }

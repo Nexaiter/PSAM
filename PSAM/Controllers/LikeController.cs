@@ -39,7 +39,7 @@ namespace PSAM.Controllers
             return Ok(new { message = "Unliked succesfully" });
         }
 
-        [HttpPost("LikeComment/{commentId}")]
+        /*[HttpPost("LikeComment/{commentId}")]
         public async Task<IActionResult> LikeComment(int commentId)
         {
             try
@@ -67,6 +67,34 @@ namespace PSAM.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }*/
+
+        [HttpGet("GetPostLikesCount/{postId}")]
+        public async Task<IActionResult> GetPostLikesCount(int postId)
+        {
+            try
+            {
+                var count = await _likeService.GetPostLikesCount(postId);
+                return Ok(new { postId = postId, likeCount = count });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred", error = ex.Message });
+            }
         }
+
+        /*[HttpGet("GetCommentLikesCount/{commentId}")]
+        public async Task<IActionResult> GetCommentLikesCount(int commentId)
+        {
+            try
+            {
+                var count = await _likeService.GetCommentLikesCount(commentId);
+                return Ok(new { commentId = commentId, likeCount = count });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred", error = ex.Message });
+            }
+        }*/
     }
 }

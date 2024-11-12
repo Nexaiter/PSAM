@@ -13,8 +13,9 @@ namespace PSAM.Repositories.IRepositories
         Task<bool> CheckUsernameExistence(string username);
         Task<bool> CheckLoginExistence(string login);
         Task<bool> CheckAccountExistence(string login);
-        Task<string> SaveImage(string base64Image);
         Task<bool> DeleteAccountById(int accountId);
         Task UpdateAccount(AccountEntity account);
+        Task SaveImageBase64(int accountId, string base64Image);
+        Task RemoveProfileImage(int accountId);
     }
 }

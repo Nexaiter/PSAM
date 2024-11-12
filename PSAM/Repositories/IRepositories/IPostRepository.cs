@@ -9,5 +9,6 @@ namespace PSAM.Repositories.IRepositories
         Task UpdatePost(PostEntity postEntity);
         Task<List<PostEntity>> GetAllPosts(int pageNumber, int pageSize);
         Task<PostEntity> GetPostById(int postId);
+        Task<List<PostEntity>> GetPostsBySubscribedAccounts(List<int> subscribedAccountIds, int pageNumber, int pageSize);
     }
 }

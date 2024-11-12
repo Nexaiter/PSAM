@@ -21,17 +21,33 @@ namespace PSAM.Services
         public async Task Subscribe(SubscribersEntity subscribe)
         {
             _appDbContext.Subscribers.Add(subscribe);
+
+            // Zwiększamy SubscriberAmount dla konta subskrybowanego
+            var subscribee = await _appDbContext.Accounts.FindAsync(subscribe.SubscribeeId);
+            if (subscribee != null)
+            {
+                subscribee.SubscriberAmount++;
+            }
+
             await _appDbContext.SaveChangesAsync();
         }
 
         public async Task Unsubscribe(int accountId, int subscribeeId)
         {
             var sub = await _appDbContext.Subscribers
-            .FirstOrDefaultAsync(s => s.SubscriberId == accountId && s.SubscribeeId == subscribeeId);
+                .FirstOrDefaultAsync(s => s.SubscriberId == accountId && s.SubscribeeId == subscribeeId);
 
             if (sub != null)
             {
                 _appDbContext.Subscribers.Remove(sub);
+
+                // Zmniejszamy SubscriberAmount dla konta subskrybowanego
+                var subscribee = await _appDbContext.Accounts.FindAsync(subscribeeId);
+                if (subscribee != null)
+                {
+                    subscribee.SubscriberAmount--;
+                }
+
                 await _appDbContext.SaveChangesAsync();
             }
         }
@@ -59,6 +75,12 @@ namespace PSAM.Services
         {
             return await _appDbContext.Subscribers
                 .AnyAsync(s => s.SubscriberId == accountId && s.SubscribeeId == subscribeeId);
+        }
+
+        public async Task<int> GetSubscriberAmount(int accountId)
+        {
+            return await _appDbContext.Subscribers
+                .CountAsync(s => s.SubscribeeId == accountId);
         }
 
 

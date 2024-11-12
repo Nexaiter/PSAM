@@ -13,14 +13,15 @@ namespace PSAM.Services
         private readonly IMapper _mapper;
         public readonly ICommentRepository _commentRepository;
         private readonly IPostRepository _postRepository;
+        private readonly IAccountRepository _accountRepository;
 
 
-        public CommentService(IMapper mapper, ICommentRepository commentRepository, IPostRepository postRepository)
+        public CommentService(IMapper mapper, ICommentRepository commentRepository, IPostRepository postRepository, IAccountRepository accountRepository)
         {
             _commentRepository = commentRepository;
             _mapper = mapper;
-            _postRepository = postRepository;   
-
+            _postRepository = postRepository;
+            _accountRepository = accountRepository;
         }
 
         public async Task<List<CommentDTO>> GetAllComments(int pageNumber, int pageSize)
@@ -70,19 +71,24 @@ namespace PSAM.Services
                     throw new CommentNotFoundException();
                 }
             }
-
-            // Tworzenie obiektu komentarza
-            var commentEntity = new CommentEntity
+            if (authorId != null)
             {
-                AuthorId = authorId,
-                Text = text,
-                PostId = postId,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-                CommentId = parentCommentId // Ustawia parentCommentId, jeśli jest odpowiedzią
-            };
+                string nickname = await _accountRepository.GetUsername(authorId);
+                // Tworzenie obiektu komentarza
+                var commentEntity = new CommentEntity
+                {
+                    AuthorId = authorId,
+                    AuthorName = nickname,
+                    Text = text,
+                    PostId = postId,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    CommentId = parentCommentId // Ustawia parentCommentId, jeśli jest odpowiedzią
+                };
 
-            await _commentRepository.CreateComment(commentEntity);
+                await _commentRepository.CreateComment(commentEntity);
+            }
+            
         }
 
         public async Task DeleteComment(int commentId)
