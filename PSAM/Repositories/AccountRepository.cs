@@ -108,5 +108,36 @@ namespace PSAM.Repositories
 
 
         }
+
+        public async Task<List<AccountEntity>> GetFilteredAccounts(int pageNumber, int pageSize, string? username, string? firstName, string? lastName, string? city)
+        {
+            var query = _appDbContext.Accounts.AsQueryable();
+
+            if (!string.IsNullOrEmpty(username))
+            {
+                query = query.Where(a => a.Username.Contains(username));
+            }
+
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                query = query.Where(a => a.FirstName.Contains(firstName));
+            }
+
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                query = query.Where(a => a.LastName.Contains(lastName));
+            }
+
+            if (!string.IsNullOrEmpty(city))
+            {
+                query = query.Where(a => a.City.Contains(city));
+            }
+
+            return await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
     }
 }

@@ -198,6 +198,13 @@ namespace PSAM.Services
             account.ImageBase64 = null; // Usuwanie obrazu poprzez ustawienie na null
             await _accountRepository.UpdateAccount(account);
         }
+
+        public async Task<List<AccountDTO>> GetFilteredAccounts(int pageNumber, int pageSize, string? username, string? firstName, string? lastName, string? city)
+        {
+            var accounts = await _accountRepository.GetFilteredAccounts(pageNumber, pageSize, username, firstName, lastName, city);
+            return _mapper.Map<List<AccountDTO>>(accounts);
+        }
+
     }
 }
 

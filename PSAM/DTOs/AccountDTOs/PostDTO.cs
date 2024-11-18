@@ -11,9 +11,7 @@ namespace PSAM.DTOs.AccountDTOs
         public int Likes { get; set; }
 
 
-        // Autor posta
-        public AccountDTO Author { get; set; }
-
+        public int AuthorId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public ICollection<PostLikeEntity> PostLikes { get; set; } = new List<PostLikeEntity>();

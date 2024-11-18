@@ -17,5 +17,6 @@ namespace PSAM.Repositories.IRepositories
         Task UpdateAccount(AccountEntity account);
         Task SaveImageBase64(int accountId, string base64Image);
         Task RemoveProfileImage(int accountId);
+        Task<List<AccountEntity>> GetFilteredAccounts(int pageNumber, int pageSize, string? username, string? firstName, string? lastName, string? city);
     }
 }

@@ -72,6 +72,25 @@ namespace PSAM.Controllers
             }
         }
 
+        [HttpGet("GetAccountById/{accountId}")]
+        public async Task<ActionResult<AccountDTO>> GetAccountById(int accountId)
+        {
+            try
+            {
+                var account = await _accountService.GetPlayerById(accountId);
+                if (account == null)
+                {
+                    return NotFound(new { message = "Account not found." });
+                }
+
+                return Ok(account);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while retrieving the account.", error = ex.Message });
+            }
+        }
+
         [HttpPost("AddTechnology")]
         public async Task<IActionResult> AddTechnology([FromBody] TechnologyModel model)
         {
@@ -217,11 +236,31 @@ namespace PSAM.Controllers
             return Ok(new { SubscriberAmount = subscriberAmount });
         }
 
+        /* [HttpGet("GetAccounts")]
+         public async Task<IActionResult> GetAccounts(int pageNumber = 1, int pageSize = 10)
+         {
+             var accounts = await _accountService.GetAllAccounts(pageNumber, pageSize);
+             return Ok(accounts);
+         }*/
+
         [HttpGet("GetAccounts")]
-        public async Task<IActionResult> GetAccounts(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAccounts(
+            int pageNumber = 1,
+            int pageSize = 10,
+            string? username = null,
+            string? firstName = null,
+            string? lastName = null,
+            string? city = null)
         {
-            var accounts = await _accountService.GetAllAccounts(pageNumber, pageSize);
-            return Ok(accounts);
+            try
+            {
+                var accounts = await _accountService.GetFilteredAccounts(pageNumber, pageSize, username, firstName, lastName, city);
+                return Ok(accounts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while retrieving accounts.", error = ex.Message });
+            }
         }
 
         [HttpPost("UpdateProfileImage")]
