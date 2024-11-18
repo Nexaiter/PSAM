@@ -10,10 +10,12 @@ namespace PSAM.Profiles
             // Creating maps of entity with DTO
             CreateMap<AccountEntity, AccountDTO>();
             CreateMap<TechnologyEntity, TechnologyDTOs>();
-            CreateMap<PostEntity, PostDTO>();
+            CreateMap<PostEntity, PostDTO>()
+            .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author));
             CreateMap<CommentEntity, CommentDTO>();
             CreateMap<PostLikeEntity, PostLikeDTO>();
             CreateMap<CommentLikeEntity, CommentLikeDTO>();
+
         }
     }
 }

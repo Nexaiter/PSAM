@@ -195,7 +195,7 @@ namespace PSAM.Services
                 throw new AccountDoesntExistException();
             }
 
-            account.ImageBase64 = null; // Usuwanie obrazu poprzez ustawienie na null
+            account.ImageBase64 = ""; // Usuwanie obrazu poprzez ustawienie na null
             await _accountRepository.UpdateAccount(account);
         }
 

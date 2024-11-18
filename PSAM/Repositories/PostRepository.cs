@@ -17,6 +17,7 @@ namespace PSAM.Repositories
         public async Task<List<PostEntity>> GetAllPosts(int pageNumber, int pageSize)
         {
             return await _appDbContext.Posts
+                .Include(p => p.Author)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -50,6 +51,7 @@ namespace PSAM.Repositories
         public async Task<List<PostEntity>> GetPostsBySubscribedAccounts(List<int> subscribedAccountIds, int pageNumber, int pageSize)
         {
             return await _appDbContext.Posts
+                .Include(p => p.Author)
                 .Where(post => subscribedAccountIds.Contains(post.AuthorId))
                 .OrderByDescending(post => post.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
