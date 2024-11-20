@@ -40,6 +40,27 @@ namespace PSAM.Controllers
             return BadRequest();
         }
 
+        [HttpGet("GetAccounts")]
+        public async Task<ActionResult> GetAccounts(
+            int pageNumber = 1,
+            int pageSize = 10,
+            string? username = null,
+            string? firstName = null,
+            string? lastName = null,
+            string? city = null,
+            string? technology = null)
+        {
+            try
+            {
+                var accounts = await _accountService.GetFilteredAccounts(pageNumber, pageSize, username, firstName, lastName, city, technology);
+                return Ok(accounts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while retrieving accounts.", error = ex.Message });
+            }
+        }
+
         [HttpDelete("DeleteMe")]
         public async Task<IActionResult> DeleteMe()
         {
@@ -151,7 +172,7 @@ namespace PSAM.Controllers
                 var techs = await _accountService.GetAccountTechs(accountId);
                 return Ok(techs);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, "Internal server error");
             }
@@ -236,32 +257,6 @@ namespace PSAM.Controllers
             return Ok(new { SubscriberAmount = subscriberAmount });
         }
 
-        /* [HttpGet("GetAccounts")]
-         public async Task<IActionResult> GetAccounts(int pageNumber = 1, int pageSize = 10)
-         {
-             var accounts = await _accountService.GetAllAccounts(pageNumber, pageSize);
-             return Ok(accounts);
-         }*/
-
-        [HttpGet("GetAccounts")]
-        public async Task<IActionResult> GetAccounts(
-            int pageNumber = 1,
-            int pageSize = 10,
-            string? username = null,
-            string? firstName = null,
-            string? lastName = null,
-            string? city = null)
-        {
-            try
-            {
-                var accounts = await _accountService.GetFilteredAccounts(pageNumber, pageSize, username, firstName, lastName, city);
-                return Ok(accounts);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "An error occurred while retrieving accounts.", error = ex.Message });
-            }
-        }
 
         [HttpPost("UpdateProfileImage")]
         public async Task<IActionResult> UpdateProfileImage([FromBody] ProfileImageUpdateModel model)

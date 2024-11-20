@@ -59,6 +59,34 @@ namespace PSAM.Services
 
             return accountDto;
         }
+
+        /*public async Task<List<AccountDTO>> GetFilteredAccounts(int pageNumber, int pageSize, string? username, string? firstName, string? lastName, string? city, string? technology)
+        {
+            var accounts = await _accountRepository.GetFilteredAccounts(pageNumber, pageSize, username, firstName, lastName, city, technology);
+            return _mapper.Map<List<AccountDTO>>(accounts);
+        }*/
+
+        public async Task<List<AccountDTO>> GetFilteredAccounts(int pageNumber, int pageSize, string? username, string? firstName, string? lastName, string? city, string? technology)
+        {
+            var accounts = await _accountRepository.GetFilteredAccounts(pageNumber, pageSize, username, firstName, lastName, city, technology);
+
+            // Pobranie technologii dla każdego konta
+            var accountDtos = _mapper.Map<List<AccountDTO>>(accounts);
+
+            foreach (var accountDto in accountDtos)
+            {
+                var technologies = await _technologyRepository.GetAccountTechnologies(accountDto.AccountId);
+                accountDto.Technologies = technologies.Select(t => new TechnologyDTOs
+                {
+                    TechnologyId = t.TechnologyId,
+                    AccountId = t.AccountId,
+                    Technology = t.Technology
+                }).ToList();
+            }
+
+            return accountDtos;
+        }
+
         public async Task<string> GetUsername(int accountId)
         {
             return await _accountRepository.GetUsername(accountId);
@@ -199,11 +227,8 @@ namespace PSAM.Services
             await _accountRepository.UpdateAccount(account);
         }
 
-        public async Task<List<AccountDTO>> GetFilteredAccounts(int pageNumber, int pageSize, string? username, string? firstName, string? lastName, string? city)
-        {
-            var accounts = await _accountRepository.GetFilteredAccounts(pageNumber, pageSize, username, firstName, lastName, city);
-            return _mapper.Map<List<AccountDTO>>(accounts);
-        }
+        
+
 
     }
 }

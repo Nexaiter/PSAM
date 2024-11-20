@@ -17,7 +17,10 @@ namespace PSAM.Repositories
         public async Task<List<PostEntity>> GetAllPosts(int pageNumber, int pageSize)
         {
             return await _appDbContext.Posts
+                .Include(p => p.PostLikes)
                 .Include(p => p.Author)
+                .Include(p => p.Author.Technologies)
+                .Include(p => p.Comments)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -58,7 +61,16 @@ namespace PSAM.Repositories
                 .Take(pageSize)
                 .ToListAsync();
         }
-
+        public async Task<List<PostEntity>> GetPostsByAccountId(int accountId, int pageNumber, int pageSize)
+        {
+            return await _appDbContext.Posts
+                .Include(p => p.Author)
+                .Where(p => p.AuthorId == accountId)
+                .OrderByDescending(p => p.CreatedAt) // Jeśli chcesz sortować np. po dacie
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
 
     }
 }

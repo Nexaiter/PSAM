@@ -26,6 +26,6 @@ namespace PSAM.Services.IServices
         Task<int> GetSubscriberAmount(int accountId);
         Task UpdateProfileImage(int accountId, string base64Image);
         Task DeleteProfileImage(int accountId);
-        Task<List<AccountDTO>> GetFilteredAccounts(int pageNumber, int pageSize, string? username, string? firstName, string? lastName, string? city);
+        Task<List<AccountDTO>> GetFilteredAccounts(int pageNumber, int pageSize, string? username, string? firstName, string? lastName, string? city, string? technology);
     }
 }

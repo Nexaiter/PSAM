@@ -33,6 +33,7 @@ namespace PSAM.Entities
 
         public virtual ICollection<PostLikeEntity> PostLikes { get; set; } // Polubienia powiązane z tym kontem
         public virtual ICollection<CommentLikeEntity> CommentLikes { get; set; } // Polubienia powiązane z tym kontem
+        public virtual ICollection<TechnologyEntity> Technologies { get; set; }
 
 
     }

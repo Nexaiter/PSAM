@@ -91,6 +91,12 @@ namespace PSAM.Entities
                 .HasForeignKey(cl => cl.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Relacja między AccountEntity a TechnologyEntity
+            modelBuilder.Entity<TechnologyEntity>()
+                .HasOne(t => t.Account)  // Technologia należy do jednego konta
+                .WithMany(a => a.Technologies)  // Konto może mieć wiele technologii
+                .HasForeignKey(t => t.AccountId);
+
             base.OnModelCreating(modelBuilder);
 
         }

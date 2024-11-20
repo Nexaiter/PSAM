@@ -16,6 +16,8 @@ namespace PSAM.Repositories
         public async Task<List<CommentEntity>> GetAllComments(int pageNumber, int pageSize)
         {
             return await _appDbContext.Comments
+                .Include(x => x.Author)
+                .Include(x => x.Author.Technologies)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -24,6 +26,7 @@ namespace PSAM.Repositories
         public async Task<List<CommentEntity>> GetAllCommentsFromPost(int postId, int pageNumber, int pageSize)
         {
             return await _appDbContext.Comments
+                .Include(x => x.Author)
                 .Where(p => p.PostId == postId)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -33,6 +36,7 @@ namespace PSAM.Repositories
         public async Task<List<CommentEntity>> GetAllCommentsFromComment(int commentId, int pageNumber, int pageSize)
         {
             return await _appDbContext.Comments
+                .Include(x => x.Author)
                 .Where(p => p.CommentId == commentId)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -67,6 +71,7 @@ namespace PSAM.Repositories
         public async Task<CommentEntity> GetCommentWithReplies(int commentId)
         {
             return await _appDbContext.Comments
+                .Include(x => x.Author)
                 .Include(c => c.Replies)
                 .FirstOrDefaultAsync(c => c.Id == commentId);
         }

@@ -109,10 +109,11 @@ namespace PSAM.Repositories
 
         }
 
-        public async Task<List<AccountEntity>> GetFilteredAccounts(int pageNumber, int pageSize, string? username, string? firstName, string? lastName, string? city)
+        public async Task<List<AccountEntity>> GetFilteredAccounts(int pageNumber, int pageSize, string? username, string? firstName, string? lastName, string? city, string? technology)
         {
             var query = _appDbContext.Accounts.AsQueryable();
 
+            // Filtracja po polach konta
             if (!string.IsNullOrEmpty(username))
             {
                 query = query.Where(a => a.Username.Contains(username));
@@ -133,11 +134,20 @@ namespace PSAM.Repositories
                 query = query.Where(a => a.City.Contains(city));
             }
 
+            // Filtrowanie po technologii
+            if (!string.IsNullOrEmpty(technology))
+            {
+                query = query.Where(a => a.Technologies.Any(t => t.Technology.Contains(technology)));
+            }
+
+            // Paginate
             return await query
+                
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
         }
+
 
     }
 }

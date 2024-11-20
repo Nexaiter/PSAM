@@ -24,6 +24,6 @@ namespace PSAM.DTOs.AccountDTOs
 
         // Lista odpowiedzi na ten komentarz
         public List<CommentDTO> Replies { get; set; } = new List<CommentDTO>();
-        public virtual ICollection<CommentLikeEntity> CommentLikes { get; set; }
+       // public virtual ICollection<CommentLikeEntity> CommentLikes { get; set; }
     }
 }

@@ -80,6 +80,10 @@ namespace PSAM.Services
             return _mapper.Map<List<PostDTO>>(posts);
         }
 
-
+        public async Task<List<PostDTO>> GetPostsByAccountId(int accountId, int pageNumber, int pageSize)
+        {
+            var posts = await _postRepository.GetPostsByAccountId(accountId, pageNumber, pageSize);
+            return _mapper.Map<List<PostDTO>>(posts);
+        }
     }
 }

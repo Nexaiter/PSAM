@@ -69,5 +69,19 @@ namespace PSAM.Controllers
             return Ok(posts);
         }
 
+        [HttpGet("GetPostsByAccountId/{accountId}")]
+        public async Task<IActionResult> GetPostsByAccountId(int accountId, int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                var posts = await _postService.GetPostsByAccountId(accountId, pageNumber, pageSize);
+                return Ok(posts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while retrieving posts.", error = ex.Message });
+            }
+        }
+
     }
 }
