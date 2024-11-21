@@ -54,6 +54,7 @@ namespace PSAM.Repositories
         public async Task<List<PostEntity>> GetPostsBySubscribedAccounts(List<int> subscribedAccountIds, int pageNumber, int pageSize)
         {
             return await _appDbContext.Posts
+                .Include(p => p.PostLikes)
                 .Include(p => p.Author)
                 .Where(post => subscribedAccountIds.Contains(post.AuthorId))
                 .OrderByDescending(post => post.CreatedAt)
@@ -64,6 +65,7 @@ namespace PSAM.Repositories
         public async Task<List<PostEntity>> GetPostsByAccountId(int accountId, int pageNumber, int pageSize)
         {
             return await _appDbContext.Posts
+                .Include(p => p.PostLikes)
                 .Include(p => p.Author)
                 .Where(p => p.AuthorId == accountId)
                 .OrderByDescending(p => p.CreatedAt) // Jeśli chcesz sortować np. po dacie
